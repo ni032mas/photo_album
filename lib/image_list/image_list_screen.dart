@@ -1,23 +1,8 @@
-import 'dart:io';
-
 import 'package:aegees_photo_album/image/image_widget.dart';
 import 'package:aegees_photo_album/models/image.dart';
-import 'package:aegees_photo_album/repositories/image_repository.dart';
+import 'package:aegees_photo_album/providers/image_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-class ImageListProvider with ChangeNotifier {
-  var _imageRepository = ImageRepository.instance;
-
-  setImage(File image) async {
-    _imageRepository.insertImage(image);
-    notifyListeners();
-  }
-
-  Future<List<ImageModel>> getImages() async {
-    return _imageRepository.getImages();
-  }
-}
 
 class ImageListScreen extends StatefulWidget {
   @override
@@ -43,7 +28,8 @@ class _ImageListScreenState extends State<ImageListScreen> {
                     itemCount: images.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                          title: ImageWidget(bytes: images[index].bytes),);
+                        title: ImageWidget(bytes: images[index].bytes),
+                      );
                     });
               } else {
                 return Text("Нет данных");

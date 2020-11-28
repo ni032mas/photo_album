@@ -4,11 +4,12 @@ import 'dart:io';
 import 'dart:typed_data';
 
 class ImageModel {
-  ImageModel({this.id, this.blob, this.bytes});
+  ImageModel({this.id, this.blob, this.bytes, this.isSelected});
 
   int id;
   String blob;
   Uint8List bytes;
+  bool isSelected;
 
   static const Base64Codec base64 = Base64Codec();
 
@@ -20,13 +21,13 @@ class ImageModel {
     return image;
   }
 
-  static Map<String, dynamic> toMap(File image) {
+  static Map<String, dynamic> fileToMap(File image) {
     Map<String, dynamic> map = Map<String, dynamic>();
     map[BLOB_COLUMN] = base64.encode(image.readAsBytesSync());
     return map;
   }
 }
 
-const IMAGE = "IMAGE";
+const IMAGE_TABLE = "IMAGE";
 const ID_COLUMN = "id";
 const BLOB_COLUMN = "blob";

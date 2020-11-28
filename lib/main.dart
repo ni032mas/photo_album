@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aegees_photo_album/image_list/image_list_screen.dart';
+import 'package:aegees_photo_album/providers/image_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
