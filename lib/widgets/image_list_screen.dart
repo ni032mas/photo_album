@@ -18,9 +18,15 @@ class _ImageListScreenState extends State<ImageListScreen> {
         return ListView.builder(
             cacheExtent: 500.0 * images.length,
             itemCount: images.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (context, int index) {
               return ListTile(
                 title: ImageWidget(bytes: images[index].bytes),
+                onLongPress: () async {
+                  Provider.of<ImageListProvider>(context, listen: false).deleteImage(await _showPopupMenu(index));
+                },
+                onTap: () async {
+                  Provider.of<ImageListProvider>(context, listen: false).deleteImage(await _showPopupMenu(index));
+                },
               );
             });
       } else {
@@ -28,4 +34,16 @@ class _ImageListScreenState extends State<ImageListScreen> {
       }
     });
   }
+
+  _showPopupMenu(int index) async => await showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(100, 400, 100, 400),
+        items: [
+          PopupMenuItem<int>(
+            value: index,
+            child: Text("Удалить"),
+          ),
+        ],
+        elevation: 8.0,
+      );
 }

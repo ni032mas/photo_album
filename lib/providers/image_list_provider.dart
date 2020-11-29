@@ -28,4 +28,10 @@ class ImageListProvider with ChangeNotifier {
   setSelected(int id) async {
     await _imageRepository.setSelected(id);
   }
+
+  deleteImage(int result) async {
+    await _imageRepository.deleteImage(result);
+    _images.removeAt(result);
+    notifyListeners();
+  }
 }

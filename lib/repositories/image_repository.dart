@@ -38,4 +38,8 @@ class ImageRepository {
     image.isSelected = true;
     image.save();
   }
+
+  deleteImage(int id) {
+    _boxImage.deleteAt(id);
+  }
 }
