@@ -5,8 +5,10 @@ import 'package:aegees_photo_album/repositories/image_repository.dart';
 import 'package:flutter/material.dart';
 
 class ImageListProvider with ChangeNotifier {
-  var _imageRepository = ImageRepository.instance;
+  var _imageRepository = ImageRepository();
   var _images = List<ImageModel>();
+
+  get images => _images;
 
   ImageListProvider() {
     init();
@@ -18,17 +20,9 @@ class ImageListProvider with ChangeNotifier {
   }
 
   setImage(File imageFile) async {
-    var id = await _imageRepository.insertImageFile(imageFile);
-    var image = await _imageRepository.getImage(id);
-    if (image != null) {
-      _images.add(image);
-      notifyListeners();
-    }
-  }
-
-  Future<List<ImageModel>> getImages() async {
-    if (_images.isEmpty) _images = await _imageRepository.getAllImages();
-    return _images;
+    var image = await _imageRepository.insertAndGetImageFile(imageFile);
+    _images.add(image);
+    notifyListeners();
   }
 
   setSelected(int id) async {

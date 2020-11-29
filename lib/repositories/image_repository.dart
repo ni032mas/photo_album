@@ -1,38 +1,41 @@
 import 'dart:io';
 
-import 'package:aegees_photo_album/database/db.dart';
+import 'package:aegees_photo_album/database/local_database.dart';
 import 'package:aegees_photo_album/models/image.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:hive/hive.dart';
 
 class ImageRepository {
   ImageRepository._();
 
-  static final ImageRepository instance = ImageRepository._();
+  static final ImageRepository _singleton = ImageRepository._();
 
-  Future<Database> _database = DBProvider.db.database;
+  factory ImageRepository() {
+    return _singleton;
+  }
+
+  Box<ImageModel> _boxImage = LocalDataBase.boxImage;
 
   Future<List<ImageModel>> getAllImages() async {
-    final db = await _database;
-    var res = await db.query(IMAGE_TABLE);
-    return res.isNotEmpty
-        ? res.map((image) => ImageModel.fromMap(image)).toList()
-        : Null;
+    return _boxImage.values?.toList();
   }
 
   Future<ImageModel> getImage(int id) async {
-    final db = await _database;
-    var res = await db.query(IMAGE_TABLE, where: "id = ?", whereArgs: [id]);
-    return res.isNotEmpty ? ImageModel.fromMap(res.first) : Null;
+    return _boxImage.get(id);
   }
 
-  Future<int> insertImageFile(File imageFile) async {
-    final db = await _database;
-    return db.insert(IMAGE_TABLE, ImageModel.fileToMap(imageFile));
+  Future<ImageModel> insertAndGetImageFile(File imageFile) async {
+    var id = _boxImage.length - 1;
+    if (id < 0) id = 0;
+    var image = ImageModel(id: id, bytes: imageFile.readAsBytesSync());
+    _boxImage.add(image);
+    return image;
   }
+
+  Future<int> insertImage(ImageModel image) async => _boxImage.add(image);
 
   setSelected(int id) async {
-    final db = await _database;
-    var image = await getImage(id);
-    return db.update(IMAGE_TABLE, image, where: "id = ?", whereArgs: [id]);
+    var image = _boxImage.getAt(id);
+    image.isSelected = true;
+    image.save();
   }
 }

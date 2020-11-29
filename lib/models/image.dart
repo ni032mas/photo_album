@@ -1,33 +1,22 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'dart:typed_data';
 
-class ImageModel {
-  ImageModel({this.id, this.blob, this.bytes, this.isSelected});
+import 'package:hive/hive.dart';
 
+part 'image.g.dart';
+
+@HiveType(typeId: 0)
+class ImageModel extends HiveObject {
+  ImageModel({this.id, this.bytes, this.isSelected = false});
+
+  @HiveField(0)
   int id;
-  String blob;
+  @HiveField(1)
   Uint8List bytes;
+  @HiveField(2)
   bool isSelected;
-
-  static const Base64Codec base64 = Base64Codec();
-
-  static ImageModel fromMap(Map map) {
-    ImageModel image = ImageModel();
-    image.id = map[ID_COLUMN];
-    image.blob = map[BLOB_COLUMN];
-    image.bytes = base64.decode(image.blob);
-    return image;
-  }
-
-  static Map<String, dynamic> fileToMap(File image) {
-    Map<String, dynamic> map = Map<String, dynamic>();
-    map[BLOB_COLUMN] = base64.encode(image.readAsBytesSync());
-    return map;
-  }
 }
 
 const IMAGE_TABLE = "IMAGE";
 const ID_COLUMN = "id";
 const BLOB_COLUMN = "blob";
+const IS_SELECTED_COLUMN = "is_selected";
