@@ -1,4 +1,4 @@
-import 'package:aegees_photo_album/models/image.dart';
+import 'package:photo_album/models/image.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

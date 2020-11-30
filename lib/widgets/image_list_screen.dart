@@ -1,7 +1,7 @@
-import 'package:aegees_photo_album/image/image_widget.dart';
-import 'package:aegees_photo_album/mixin/custom_context_menu.dart';
-import 'package:aegees_photo_album/models/image.dart';
-import 'package:aegees_photo_album/providers/image_list_provider.dart';
+import 'package:photo_album/image/image_widget.dart';
+import 'package:photo_album/mixin/custom_context_menu.dart';
+import 'package:photo_album/models/image.dart';
+import 'package:photo_album/providers/image_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

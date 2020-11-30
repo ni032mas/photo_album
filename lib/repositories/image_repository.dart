@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:aegees_photo_album/database/local_database.dart';
-import 'package:aegees_photo_album/models/image.dart';
+import 'package:photo_album/database/local_database.dart';
+import 'package:photo_album/models/image.dart';
 import 'package:hive/hive.dart';
 
 class ImageRepository {

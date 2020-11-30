@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:aegees_photo_album/database/local_database.dart';
-import 'package:aegees_photo_album/widgets/image_list_screen.dart';
-import 'package:aegees_photo_album/providers/image_list_provider.dart';
+import 'package:photo_album/database/local_database.dart';
+import 'package:photo_album/widgets/image_list_screen.dart';
+import 'package:photo_album/providers/image_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,19 +15,19 @@ void main() async {
       ChangeNotifierProvider<ImageListProvider>(
           create: (context) => ImageListProvider())
     ],
-    child: AegeesApp(),
+    child: PhotoAlbumApp(),
   ));
 }
 
-class AegeesApp extends StatelessWidget {
+class PhotoAlbumApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Photo album',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Photo album'),
     );
   }
 }

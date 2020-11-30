@@ -1,4 +1,4 @@
-package com.aegees_photo_album
+package com.photo_album
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

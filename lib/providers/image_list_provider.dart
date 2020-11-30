@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:aegees_photo_album/models/image.dart';
-import 'package:aegees_photo_album/repositories/image_repository.dart';
+import 'package:photo_album/models/image.dart';
+import 'package:photo_album/repositories/image_repository.dart';
 import 'package:flutter/material.dart';
 
 class ImageListProvider with ChangeNotifier {
