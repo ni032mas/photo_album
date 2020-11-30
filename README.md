@@ -1,4 +1,4 @@
-# aegees_photo_album
+# photo_album
 
 A new Flutter application.
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:photo_album/database/local_database.dart';
+import 'package:photo_album/widgets/fab.dart';
 import 'package:photo_album/widgets/image_list_screen.dart';
 import 'package:photo_album/providers/image_list_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,7 @@ import 'package:provider/provider.dart';
 void main() async {
   await LocalDataBase.initDB();
   runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider<ImageListProvider>(
-          create: (context) => ImageListProvider())
-    ],
+    providers: [ChangeNotifierProvider<ImageListProvider>(create: (context) => ImageListProvider())],
     child: PhotoAlbumApp(),
   ));
 }
@@ -51,9 +49,19 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  Future getCamera() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera, imageQuality: 10);
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      final model = Provider.of<ImageListProvider>(context, listen: false);
+      model.setImage(_image);
+    } else {
+      print('No image selected.');
+    }
+  }
+
   Future getImage() async {
-    final pickedFile =
-        await picker.getImage(source: ImageSource.camera, imageQuality: 10);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 10);
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       final model = Provider.of<ImageListProvider>(context, listen: false);
@@ -72,10 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: ImageListScreen(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
+      floatingActionButton: CustomFab(
+        onPressedImage: getImage,
+        onPressedCamera: getCamera,
         tooltip: 'Pick Image',
-        child: Icon(Icons.add_a_photo),
       ),
     );
   }

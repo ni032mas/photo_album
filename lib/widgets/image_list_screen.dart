@@ -45,7 +45,7 @@ class _ImageListScreenState extends State<ImageListScreen> with CustomPopupMenu 
         ),
       ],
     ).then<void>((int result) {
-      if (result >= 0) {
+      if (result != null && result >= 0) {
         Provider.of<ImageListProvider>(context, listen: false).deleteImage(result);
       }
     });
