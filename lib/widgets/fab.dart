@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class CustomFab extends StatefulWidget {
@@ -112,7 +114,25 @@ class _CustomFabState extends State<CustomFab> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
+      children: _getWidgets(),
+    );
+  }
+
+  List<Widget> _getWidgets() {
+    if (Platform.isWindows) {
+      return [
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value * 1.0,
+            0.0,
+          ),
+          child: image(),
+        ),
+        toggle(),
+      ];
+    } else {
+      return [
         Transform(
           transform: Matrix4.translationValues(
             0.0,
@@ -130,7 +150,7 @@ class _CustomFabState extends State<CustomFab> with SingleTickerProviderStateMix
           child: camera(),
         ),
         toggle(),
-      ],
-    );
+      ];
+    }
   }
 }

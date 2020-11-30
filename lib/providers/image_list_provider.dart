@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:photo_album/models/image.dart';
 import 'package:photo_album/repositories/image_repository.dart';
@@ -21,6 +22,12 @@ class ImageListProvider with ChangeNotifier {
 
   setImage(File imageFile) async {
     var image = await _imageRepository.insertAndGetImageFile(imageFile);
+    _images.add(image);
+    notifyListeners();
+  }
+
+  setBytesImage(Uint8List bytes) async {
+    var image = await _imageRepository.insertImageBytesAndGetImageFile(bytes);
     _images.add(image);
     notifyListeners();
   }

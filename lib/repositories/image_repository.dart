@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:photo_album/database/local_database.dart';
 import 'package:photo_album/models/image.dart';
@@ -27,6 +28,14 @@ class ImageRepository {
     var id = _boxImage.length - 1;
     if (id < 0) id = 0;
     var image = ImageModel(id: id, bytes: imageFile.readAsBytesSync());
+    _boxImage.add(image);
+    return image;
+  }
+
+  Future<ImageModel> insertImageBytesAndGetImageFile(Uint8List bytes) async {
+    var id = _boxImage.length - 1;
+    if (id < 0) id = 0;
+    var image = ImageModel(id: id, bytes: bytes);
     _boxImage.add(image);
     return image;
   }

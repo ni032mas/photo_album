@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:file_chooser/file_chooser.dart';
 import 'package:photo_album/database/local_database.dart';
 import 'package:photo_album/widgets/fab.dart';
 import 'package:photo_album/widgets/image_list_screen.dart';
@@ -61,14 +63,54 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 10);
-    if (pickedFile != null) {
-      _image = File(pickedFile.path);
-      final model = Provider.of<ImageListProvider>(context, listen: false);
-      model.setImage(_image);
+    if (Platform.isWindows) {
+      showOpenPanel(allowedFileTypes: <FileTypeFilterGroup>[
+        FileTypeFilterGroup(label: 'Images', fileExtensions: <String>[
+          'bmp',
+          'gif',
+          'jpeg',
+          'jpg',
+          'png',
+          'tiff',
+          'webp',
+        ]),
+      ]).then((result) {
+        if (!result.canceled) {
+          try {
+            String myPath = result.paths[0];
+            _readFileByte(myPath).then((bytes) {
+              final model = Provider.of<ImageListProvider>(context, listen: false);
+              model.setBytesImage(bytes);
+              //do your task here
+            });
+          } catch (e) {
+            // if path invalid or not able to read
+            print(e);
+          }
+        }
+      });
     } else {
-      print('No image selected.');
+      final pickedFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 10);
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        final model = Provider.of<ImageListProvider>(context, listen: false);
+        model.setImage(_image);
+      } else {
+        print('No image selected.');
+      }
     }
+  }
+
+  Future<Uint8List> _readFileByte(String filePath) async {
+    File file = new File(filePath);
+    Uint8List bytes;
+    await file.readAsBytes().then((value) {
+      bytes = Uint8List.fromList(value);
+      print('reading of bytes is completed');
+    }).catchError((onError) {
+      print('Exception Error while reading audio from path:' + onError.toString());
+    });
+    return bytes;
   }
 
   @override
