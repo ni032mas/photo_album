@@ -1,4 +1,5 @@
 import 'package:aegees_photo_album/image/image_widget.dart';
+import 'package:aegees_photo_album/mixin/custom_context_menu.dart';
 import 'package:aegees_photo_album/models/image.dart';
 import 'package:aegees_photo_album/providers/image_list_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class ImageListScreen extends StatefulWidget {
   _ImageListScreenState createState() => _ImageListScreenState();
 }
 
-class _ImageListScreenState extends State<ImageListScreen> {
+class _ImageListScreenState extends State<ImageListScreen> with CustomPopupMenu {
   @override
   Widget build(BuildContext context) {
     return Consumer<ImageListProvider>(builder: (context, model, child) {
@@ -19,14 +20,13 @@ class _ImageListScreenState extends State<ImageListScreen> {
             cacheExtent: 500.0 * images.length,
             itemCount: images.length,
             itemBuilder: (context, int index) {
-              return ListTile(
-                title: ImageWidget(bytes: images[index].bytes),
-                onLongPress: () async {
-                  Provider.of<ImageListProvider>(context, listen: false).deleteImage(await _showPopupMenu(index));
-                },
-                onTap: () async {
-                  Provider.of<ImageListProvider>(context, listen: false).deleteImage(await _showPopupMenu(index));
-                },
+              return GestureDetector(
+                child: ListTile(
+                  title: ImageWidget(bytes: images[index].bytes),
+                ),
+                onTapDown: storePosition,
+                onTap: () => _showCustomMenu(index),
+                onLongPress: () => _showCustomMenu(index),
               );
             });
       } else {
@@ -35,15 +35,19 @@ class _ImageListScreenState extends State<ImageListScreen> {
     });
   }
 
-  _showPopupMenu(int index) async => await showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(100, 400, 100, 400),
-        items: [
-          PopupMenuItem<int>(
-            value: index,
-            child: Text("Удалить"),
-          ),
-        ],
-        elevation: 8.0,
-      );
+  void _showCustomMenu(int index) {
+    this.showMenu(
+      context: context,
+      items: <PopupMenuEntry<int>>[
+        PopupMenuItem<int>(
+          value: index,
+          child: Text("Удалить"),
+        ),
+      ],
+    ).then<void>((int result) {
+      if (result >= 0) {
+        Provider.of<ImageListProvider>(context, listen: false).deleteImage(result);
+      }
+    });
+  }
 }
